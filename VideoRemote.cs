@@ -26,14 +26,13 @@ using ABI_RC.Core.Networking;
 using ABI_RC.Core.Savior;
 using System.Diagnostics;
 
-
 namespace VideoRemote
 {
     public static class ModBuildInfo
     {
         public const string Name = "Video Remote";
         public const string Author = "Shin, Nirvash";
-        public const string Version = "1.7.8";
+        public const string Version = "1.7.10";
         public const string Description = "This allows you to use the video player with the menu.";
         public const string DownloadLink = "https://github.com/Nirv-git/VideoRemote/releases";
     }
@@ -145,6 +144,8 @@ namespace VideoRemote
             QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModSound", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.Sound.png"));
             QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModKeys", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.Keys.png"));
             QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModVideoPlayer", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.VideoPlayer.png"));
+            QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModVideoPlayer-World", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.VideoPlayer-World.png"));
+            QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModVideoPlayer-Prop", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.VideoPlayer-Prop.png"));
             QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModPastePlay", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.PastePlay.png"));
             QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModSave", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.Save.png"));
             QuickMenuAPI.PrepareIcon("VideoRemoteMod", "VideoPlayerModSponsorSkip", Assembly.GetExecutingAssembly().GetManifestResourceStream("VideoRemote.UI.Images.SponsorSkip.png"));
@@ -366,7 +367,8 @@ namespace VideoRemote
                     foreach (ViewManagerVideoPlayer vp in savedvpui.Cast<ViewManagerVideoPlayer>())
                     {
                         var dist = Math.Abs(Vector3.Distance(CVRvp.gameObject.transform.position, Camera.main.transform.position)).ToString("F2").TrimEnd('0');
-                        var button = VideoPlayerList.AddButton($"Video Player\n{Utils.GetPlayerType(CVRvp.gameObject.transform)}", "VideoPlayerModVideoPlayer", $"Video:{Utils.VideoNameFormat(vp)}, Distance:{dist}<p>{Utils.GetPath(CVRvp.gameObject.transform)}");// | {CVRvp.playerId}");
+                        var playerType = Utils.GetPlayerType(CVRvp.gameObject.transform);
+                        var button = VideoPlayerList.AddButton($"Video Player\n{playerType}", $"{(playerType == "Prop" ? "VideoPlayerModVideoPlayer-Prop" : "VideoPlayerModVideoPlayer-World")}", $"Video:{Utils.VideoNameFormat(vp)}, Distance:{dist}<p>{Utils.GetPath(CVRvp.gameObject.transform)}");// | {CVRvp.playerId}");
                         button.OnPress += () =>
                         {
                             VideoPlayerSelected = vp;
@@ -600,7 +602,7 @@ namespace VideoRemote
                     {
                         QuickMenuAPI.ShowConfirm("Confirm", $"Play Video?<p><p><p>Blank Video<p><p><p>1min long, Black, 480p", () =>
                         {
-                            VideoPlayerSelected.videoPlayer.SetVideoUrl("https://www.youtube.com/watch?v=k9NfB9-CR1k");
+                            VideoPlayerSelected.videoPlayer.SetVideoUrl("https://www.youtube.com/watch?v=-Pg819il8lY");
                             MelonCoroutines.Start(Instance.SetCurrentVideoNameDelay());
                         }, () => { }, "Yes", "No");
                     }
@@ -1431,7 +1433,6 @@ namespace VideoRemote
             {
                 if (Utils.IsVideoPlayerValid(VideoPlayerSelected))
                 {
-                    yield return new WaitForSeconds(1f);
                     if (VideoPlayerSelected.videoPlayer.lastNetworkVideoUrl != lastvideo && !String.IsNullOrWhiteSpace(VideoPlayerSelected.videoPlayer.lastNetworkVideoUrl))
                     {
                         startedSkips = false;
@@ -1458,6 +1459,7 @@ namespace VideoRemote
                         CreatePageSponsorSkip();
                     }
                 }
+                yield return new WaitForSeconds(1f);
             }
             sponsorSkip = false;
         }
