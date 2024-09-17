@@ -37,7 +37,7 @@ namespace VideoRemote
                 string objPath = reader.ReadString();
                 bool isPaused = reader.ReadBoolean();
                 //var currentPlayers = GameObject.FindObjectsOfType<CVRVideoPlayer>(false);
-                if (CVRWorld.Instance.VideoPlayers.Find((Predicate<CVRVideoPlayer>)(match => match.playerId == vidPlayerID)))
+                if (CVRWorld.Instance._registeredVideoPlayers.Find((Predicate<CVRVideoPlayer>)(match => match.playerId == vidPlayerID)))
                 { //If the video player exists in world, this doesn't need to run
                     if (VideoRemoteMod.vidPlayerJoinBuffer.ContainsKey(vidPlayerID) && VideoRemoteMod.vidPlayerJoinBuffer[vidPlayerID].Item1 != url)
                         VideoRemoteMod.vidJoinBuffer_toRemove.Add(vidPlayerID); //If another command comes in while we have one in the buffer, drop past one from buffer

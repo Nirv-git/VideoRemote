@@ -32,7 +32,7 @@ namespace VideoRemote
     {
         public const string Name = "Video Remote";
         public const string Author = "Shin, Nirvash";
-        public const string Version = "1.7.10";
+        public const string Version = "1.7.11";
         public const string Description = "This allows you to use the video player with the menu.";
         public const string DownloadLink = "https://github.com/Nirv-git/VideoRemote/releases";
     }
@@ -1227,7 +1227,7 @@ namespace VideoRemote
                             continue;
                         }
 
-                        var foundPlayer = CVRWorld.Instance.VideoPlayers.Find((Predicate<CVRVideoPlayer>)(match => match.playerId == buffer.Key));
+                        var foundPlayer = CVRWorld.Instance._registeredVideoPlayers.Find((Predicate<CVRVideoPlayer>)(match => match.playerId == buffer.Key));
                         if (foundPlayer != null)
                         {
                             //MelonLogger.Msg($"Match Found");
